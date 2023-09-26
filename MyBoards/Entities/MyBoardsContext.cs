@@ -22,6 +22,8 @@ public class MyBoardsContext : DbContext
             eb.Property(wi => wi.Activity).HasMaxLength(200);
             eb.Property(wi => wi.RemaningWork).HasPrecision(14, 2);
             eb.Property(wi => wi.Priority).HasDefaultValue(1);
+            eb.HasMany(wi => wi.Comments).WithOne(c => c.WorkItem).HasForeignKey(c => c.WorkItemId);
+            eb.HasOne(wi => wi.Author).WithMany(u => u.WorkItems).HasForeignKey(u => u.AuthorId);
         });
         modelBuilder.Entity<Comment>(eb =>
         {
