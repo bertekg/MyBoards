@@ -6,6 +6,9 @@ public class MyBoardsContext : DbContext
 {
     public MyBoardsContext(DbContextOptions<MyBoardsContext> options) : base(options){ }
     public DbSet<WorkItem> WorkItems { get; set; }
+    public DbSet<Issue> Issues { get; set; }
+    public DbSet<Epic> Epics { get; set; }
+    public DbSet<Task> Tasks { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Comment> Comments { get; set; }
@@ -17,10 +20,6 @@ public class MyBoardsContext : DbContext
         {
             eb.Property(wi => wi.Area).HasColumnType("varchar(200)");
             eb.Property(wi => wi.IterationPath).HasColumnName("Iteration_Path");
-            eb.Property(wi => wi.Efford).HasColumnType("decimal(5,2)");
-            eb.Property(wi => wi.EndDate).HasPrecision(3);
-            eb.Property(wi => wi.Activity).HasMaxLength(200);
-            eb.Property(wi => wi.RemaningWork).HasPrecision(14, 2);
             eb.Property(wi => wi.Priority).HasDefaultValue(1);
             eb.HasMany(wi => wi.Comments).WithOne(c => c.WorkItem).HasForeignKey(c => c.WorkItemId);
             eb.HasOne(wi => wi.Author).WithMany(u => u.WorkItems).HasForeignKey(u => u.AuthorId);
@@ -33,8 +32,16 @@ public class MyBoardsContext : DbContext
                     wit.Property(x => x.PublicationDate).HasDefaultValueSql("getutcdate()");
                 }
                 );
-            eb.HasOne(wi => wi.WorkItemState).WithMany().HasForeignKey(wi => wi.WorkItemStateId);
+            eb.HasOne(wi => wi.State).WithMany().HasForeignKey(wi => wi.StateId);
         });
+
+        modelBuilder.Entity<Epic>().Property(wi => wi.EndDate).HasPrecision(3);
+        modelBuilder.Entity<Task>(t =>
+        {
+            t.Property(wi => wi.Activity).HasMaxLength(200);
+            t.Property(wi => wi.RemaningWork).HasPrecision(14, 2);
+        });
+        modelBuilder.Entity<Issue>().Property(wi => wi.Efford).HasColumnType("decimal(5,2)");
 
         modelBuilder.Entity<Comment>(eb =>
         {
@@ -48,7 +55,7 @@ public class MyBoardsContext : DbContext
             .HasForeignKey<Address>(a => a.UserId);
 
         modelBuilder.Entity<WorkItemState>()
-            .Property(wis => wis.State)
+            .Property(wis => wis.Value)
             .IsRequired()
             .HasMaxLength(50);
     }
