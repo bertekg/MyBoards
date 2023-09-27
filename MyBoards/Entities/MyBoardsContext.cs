@@ -57,6 +57,6 @@ public class MyBoardsContext : DbContext
         modelBuilder.Entity<WorkItemState>()
             .Property(wis => wis.Value)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(60);
     }
 }
