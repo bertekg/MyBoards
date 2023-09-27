@@ -10,11 +10,11 @@ public class MyBoardsContext : DbContext
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Address> Addresses { get; set; }
+    public DbSet<WorkItemState> WorkItemStates { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<WorkItem>(eb =>
         {
-            eb.Property(wi => wi.State).IsRequired();
             eb.Property(wi => wi.Area).HasColumnType("varchar(200)");
             eb.Property(wi => wi.IterationPath).HasColumnName("Iteration_Path");
             eb.Property(wi => wi.Efford).HasColumnType("decimal(5,2)");
@@ -33,7 +33,9 @@ public class MyBoardsContext : DbContext
                     wit.Property(x => x.PublicationDate).HasDefaultValueSql("getutcdate()");
                 }
                 );
+            eb.HasOne(wi => wi.WorkItemState).WithMany().HasForeignKey(wi => wi.WorkItemStateId);
         });
+
         modelBuilder.Entity<Comment>(eb =>
         {
             eb.Property(c => c.CreatedDate).HasDefaultValueSql("getutcdate()");
@@ -44,5 +46,10 @@ public class MyBoardsContext : DbContext
             .HasOne(u => u.Address)
             .WithOne(a => a.User)
             .HasForeignKey<Address>(a => a.UserId);
+
+        modelBuilder.Entity<WorkItemState>()
+            .Property(wis => wis.State)
+            .IsRequired()
+            .HasMaxLength(50);
     }
 }
