@@ -24,6 +24,15 @@ public class MyBoardsContext : DbContext
             eb.Property(wi => wi.Priority).HasDefaultValue(1);
             eb.HasMany(wi => wi.Comments).WithOne(c => c.WorkItem).HasForeignKey(c => c.WorkItemId);
             eb.HasOne(wi => wi.Author).WithMany(u => u.WorkItems).HasForeignKey(u => u.AuthorId);
+            eb.HasMany(wi => wi.Tags).WithMany(t => t.WorkItems).UsingEntity<WorkItemTag>(
+                wi => wi.HasOne(wit => wit.Tag).WithMany().HasForeignKey(wit => wit.TagId),
+                wi => wi.HasOne(wit => wit.WorkItem).WithMany().HasForeignKey(wit => wit.WorkItemId),
+                wit =>
+                {
+                    wit.HasKey(x => new {x.TagId, x.WorkItemId});
+                    wit.Property(x => x.PublicationDate).HasDefaultValueSql("getutcdate()");
+                }
+                );
         });
         modelBuilder.Entity<Comment>(eb =>
         {
