@@ -1,0 +1,9 @@
+add-migration [Nazwa migracji]
+
+update-database -v
+
+script-migration
+
+script-migration [Nazwa migracji od której tworzymy plik]
+
+script-migration [Nazwa migracji od której tworzymy plik] [Nazwa migracji do włącznie której tworzymy plik]

@@ -12,11 +12,19 @@ builder.Services.AddDbContext<MyBoardsContext>(
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+
+using var scope = app.Services.CreateScope();
+var dbContext = scope.ServiceProvider.GetService<MyBoardsContext>();
+
+var pendingMigration = dbContext.Database.GetPendingMigrations();
+if (pendingMigration.Any())
+{
+    dbContext.Database.Migrate();
 }
 
 app.Run();
