@@ -7,3 +7,9 @@ script-migration
 script-migration [Nazwa migracji od której tworzymy plik]
 
 script-migration [Nazwa migracji od której tworzymy plik] [Nazwa migracji do włącznie której tworzymy plik]
+
+script-migration -idempotent
+
+remove-migration
+
+update-database [Nazwa migracji gdzie chcemy się cofnąć]
