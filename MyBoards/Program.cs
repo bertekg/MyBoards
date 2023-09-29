@@ -113,7 +113,9 @@ app.MapGet("most-frequently-commenting-user", (MyBoardsContext db) =>
 
 app.MapGet("most-frequently-commenting-user-course", async (MyBoardsContext db) =>
 {
-    var authrsCommentCounts = await db.Comments.GroupBy (c => c.AuthorId).Select(g => new {g.Key, Count = g.Count()}).ToListAsync();
+    var authrsCommentCountsQuery = db.Comments.GroupBy (c => c.AuthorId).Select(g => new {g.Key, Count = g.Count()});
+
+    var authrsCommentCounts = await authrsCommentCountsQuery.ToListAsync();
 
     var topAuthor = authrsCommentCounts.First(a => a.Count == authrsCommentCounts.Max(acc => acc.Count));
 
