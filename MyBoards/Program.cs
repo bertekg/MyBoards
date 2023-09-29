@@ -89,4 +89,37 @@ app.MapGet("states-count", async (MyBoardsContext db) =>
     return statesCount;
 });
 
+app.MapGet("epics-on-hold-sorted-by-priority", async (MyBoardsContext db) =>
+{
+    var epicsOnHoldSortedByPriority = await db.Epics.Where(e => e.StateId == 4).OrderBy(e => e.Priority).ToListAsync();
+    return new { count = epicsOnHoldSortedByPriority.Count, list = epicsOnHoldSortedByPriority };
+});
+
+app.MapGet("most-frequently-commenting-user", (MyBoardsContext db) =>
+{
+    var commentUser = db.Comments.GroupBy(c => c.AuthorId)
+    .Select(g => new { AuthorId = g.Key, count = g.Count() })
+    .OrderByDescending(cu => cu.count).ToList();
+    var topUser = commentUser.First();
+    var topCommentedUser = commentUser.Where(cu => cu.count == topUser.count).ToList();
+    List<IQueryable<User>> users = new List<IQueryable<User>>();
+    foreach (var user in topCommentedUser)
+    {
+        users.Add(db.Users.Where(w => w.Id == user.AuthorId));
+    }
+    var topUsers = users.ToList();
+    return new { topCommentsCount = topUser.count, users = topUsers };
+});
+
+app.MapGet("most-frequently-commenting-user-course", async (MyBoardsContext db) =>
+{
+    var authrsCommentCounts = await db.Comments.GroupBy (c => c.AuthorId).Select(g => new {g.Key, Count = g.Count()}).ToListAsync();
+
+    var topAuthor = authrsCommentCounts.First(a => a.Count == authrsCommentCounts.Max(acc => acc.Count));
+
+    var userDetails = db.Users.First(u => u.Id == topAuthor.Key);
+
+    return new { userDetails, commentCount = topAuthor.Count };
+});
+
 app.Run();
