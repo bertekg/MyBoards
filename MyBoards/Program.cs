@@ -71,17 +71,63 @@ app.MapPost("update", async (MyBoardsContext db) =>
 {
     var epic = await db.Epics.FirstAsync(epic => epic.Id == 1);
 
-    //var onHoldState = await db.WorkItemStates.FirstAsync(a => a.Value == "On Hold");
     var doneState = await db.WorkItemStates.FirstAsync(a => a.Value == "Done");
 
-    epic.Area = "Updated area";
-    epic.Priority = 1;
-    epic.StartDate = DateTime.UtcNow;
-    //epic.StateId = onHoldState.Id;
     epic.State = doneState;
 
     await db.SaveChangesAsync();
     return epic;
+});
+
+app.MapPost("create", async (MyBoardsContext db) =>
+{
+    //Tag tag = new Tag
+    //{
+    //    Value = "EF"
+    //};
+
+    //await db.AddAsync(tag);
+    //await db.Tags.AddAsync(tag);
+    //await db.SaveChangesAsync();
+
+    //return tag;
+
+
+    //Tag mvcTag = new Tag
+    //{
+    //    Value = "MVC"
+    //};
+    //Tag aspTag = new Tag
+    //{
+    //    Value = "ASP"
+    //};
+
+    //var tags = new List<Tag>() { mvcTag, aspTag };
+
+    //await db.Tags.AddRangeAsync(tags);
+    //await db.SaveChangesAsync();
+
+    //return tags;
+
+    var adress = new Address
+    {
+        Id = Guid.Parse("9a8f2278-77b8-48e3-8972-b5f501eeac40"),
+        City = "Kraków",
+        Country = "Poland",
+        Street = "D³uga"
+    };
+
+    var user = new User
+    {
+        Email = "user@test.com",
+        FullName = "Test User",
+        Address = adress,
+    };
+
+    await db.Users.AddAsync(user);
+    await db.SaveChangesAsync();
+
+    return user;
 });
 
 app.Run();
