@@ -1,10 +1,17 @@
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using MyBoards.Entities;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
+
 
 builder.Services.AddDbContext<MyBoardsContext>(
     option => option.UseSqlServer(builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
@@ -56,15 +63,15 @@ if (users.Any() == false)
 
 app.MapGet("data", async (MyBoardsContext db) =>
 {
-    var authrsCommentCountsQuery = db.Comments.GroupBy (c => c.AuthorId).Select(g => new {g.Key, Count = g.Count()});
+    var user = await db.Users
+    .Include(u => u.Comments)
+    .ThenInclude(c => c.WorkItem)
+    .Include(u => u.Address)
+    .FirstAsync(u => u.Id == Guid.Parse("68366DBE-0809-490F-CC1D-08DA10AB0E61"));
+    
+    //var userComments = await db.Comments.Where(c => c.AuthorId == user.Id).ToListAsync();
 
-    var authrsCommentCounts = await authrsCommentCountsQuery.ToListAsync();
-
-    var topAuthor = authrsCommentCounts.First(a => a.Count == authrsCommentCounts.Max(acc => acc.Count));
-
-    var userDetails = db.Users.First(u => u.Id == topAuthor.Key);
-
-    return new { userDetails, commentCount = topAuthor.Count };
+    return user;
 });
 
 app.MapPost("update", async (MyBoardsContext db) =>
@@ -81,34 +88,6 @@ app.MapPost("update", async (MyBoardsContext db) =>
 
 app.MapPost("create", async (MyBoardsContext db) =>
 {
-    //Tag tag = new Tag
-    //{
-    //    Value = "EF"
-    //};
-
-    //await db.AddAsync(tag);
-    //await db.Tags.AddAsync(tag);
-    //await db.SaveChangesAsync();
-
-    //return tag;
-
-
-    //Tag mvcTag = new Tag
-    //{
-    //    Value = "MVC"
-    //};
-    //Tag aspTag = new Tag
-    //{
-    //    Value = "ASP"
-    //};
-
-    //var tags = new List<Tag>() { mvcTag, aspTag };
-
-    //await db.Tags.AddRangeAsync(tags);
-    //await db.SaveChangesAsync();
-
-    //return tags;
-
     var adress = new Address
     {
         Id = Guid.Parse("9a8f2278-77b8-48e3-8972-b5f501eeac40"),
