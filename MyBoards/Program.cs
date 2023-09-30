@@ -63,15 +63,55 @@ if (users.Any() == false)
 
 app.MapGet("data", async (MyBoardsContext db) =>
 {
-    var user = await db.Users
-    .Include(u => u.Comments)
-    .ThenInclude(c => c.WorkItem)
-    .Include(u => u.Address)
-    .FirstAsync(u => u.Id == Guid.Parse("68366DBE-0809-490F-CC1D-08DA10AB0E61"));
-    
-    //var userComments = await db.Comments.Where(c => c.AuthorId == user.Id).ToListAsync();
+    //var user = await db.Users
+    //.FirstAsync(u => u.Id == Guid.Parse("D00D8059-8977-4E5F-CBD2-08DA10AB0E61"));
 
-    return user;
+    //var entries1 = db.ChangeTracker.Entries();
+
+    //user.Email = "test@test.com";
+
+    //db.SaveChanges();
+
+    //return user;
+
+
+    //var user = await db.Users
+    //.FirstAsync(u => u.Id == Guid.Parse("D00D8059-8977-4E5F-CBD2-08DA10AB0E61"));
+
+    //db.Users.Remove(user);
+
+    //var newUser = new User
+    //{
+    //    FullName = "New User"
+    //};
+
+    //db.Users.Add(newUser);
+
+    //var entries2 = db.ChangeTracker.Entries();
+
+    //db.SaveChanges();
+
+    //return user;
+
+
+    //var workItem = new Epic
+    //{
+    //    Id = 2
+    //};
+
+    //var entry = db.Attach(workItem);
+    //entry.State = EntityState.Deleted;
+
+    //db.SaveChanges();
+
+    //return workItem;
+
+
+    var states = db.WorkItemStates.AsNoTracking().ToList();
+
+    var entries1 = db.ChangeTracker.Entries();
+
+    return states;
 });
 
 app.MapPost("update", async (MyBoardsContext db) =>
