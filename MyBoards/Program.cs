@@ -63,42 +63,8 @@ if (users.Any() == false)
 
 app.MapGet("data", async (MyBoardsContext db) =>
 {
-    //    var states = db.WorkItemStates
-    //    .FromSqlRaw(@"SELECT wis.Id, wis.Value
-    //FROM WorkItemStates wis
-    //JOIN WorkItems wi on wi.StateId = wis.Id
-    //Group BY wis.Id, wis.Value
-    //HAVING COUNT(*) > 85")
-    //    .ToList();
-
-    //    return states;
-
-
-    //    var minWorkItemsCount = "85";
-
-    //    var states = db.WorkItemStates
-    //    .FromSqlRaw(@"SELECT wis.Id, wis.Value
-    //FROM WorkItemStates wis
-    //JOIN WorkItems wi on wi.StateId = wis.Id
-    //Group BY wis.Id, wis.Value
-    //HAVING COUNT(*) > " + minWorkItemsCount)
-    //    .ToList();
-
-
-    //    var minWorkItemsCount = 85;
-
-    //    var states = db.WorkItemStates
-    //    .FromSqlInterpolated($@"SELECT wis.Id, wis.Value
-    //FROM WorkItemStates wis
-    //JOIN WorkItems wi on wi.StateId = wis.Id
-    //Group BY wis.Id, wis.Value
-    //HAVING COUNT(*) > {minWorkItemsCount}").ToList();
-
-    //    return states;
-
-    db.Database.ExecuteSqlRaw(@"UPDATE Comments
-SET UpdatedDate = GETDATE()
-WHERE AuthorId = '2073271A-3DFC-4A63-CBE5-08DA10AB0E61'");
+    var topAuthors = db.ViewTopAuthors.ToList();
+    return topAuthors;
 });
 
 app.MapPost("update", async (MyBoardsContext db) =>
