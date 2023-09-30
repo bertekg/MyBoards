@@ -63,55 +63,42 @@ if (users.Any() == false)
 
 app.MapGet("data", async (MyBoardsContext db) =>
 {
-    //var user = await db.Users
-    //.FirstAsync(u => u.Id == Guid.Parse("D00D8059-8977-4E5F-CBD2-08DA10AB0E61"));
+    //    var states = db.WorkItemStates
+    //    .FromSqlRaw(@"SELECT wis.Id, wis.Value
+    //FROM WorkItemStates wis
+    //JOIN WorkItems wi on wi.StateId = wis.Id
+    //Group BY wis.Id, wis.Value
+    //HAVING COUNT(*) > 85")
+    //    .ToList();
 
-    //var entries1 = db.ChangeTracker.Entries();
-
-    //user.Email = "test@test.com";
-
-    //db.SaveChanges();
-
-    //return user;
-
-
-    //var user = await db.Users
-    //.FirstAsync(u => u.Id == Guid.Parse("D00D8059-8977-4E5F-CBD2-08DA10AB0E61"));
-
-    //db.Users.Remove(user);
-
-    //var newUser = new User
-    //{
-    //    FullName = "New User"
-    //};
-
-    //db.Users.Add(newUser);
-
-    //var entries2 = db.ChangeTracker.Entries();
-
-    //db.SaveChanges();
-
-    //return user;
+    //    return states;
 
 
-    //var workItem = new Epic
-    //{
-    //    Id = 2
-    //};
+    //    var minWorkItemsCount = "85";
 
-    //var entry = db.Attach(workItem);
-    //entry.State = EntityState.Deleted;
-
-    //db.SaveChanges();
-
-    //return workItem;
+    //    var states = db.WorkItemStates
+    //    .FromSqlRaw(@"SELECT wis.Id, wis.Value
+    //FROM WorkItemStates wis
+    //JOIN WorkItems wi on wi.StateId = wis.Id
+    //Group BY wis.Id, wis.Value
+    //HAVING COUNT(*) > " + minWorkItemsCount)
+    //    .ToList();
 
 
-    var states = db.WorkItemStates.AsNoTracking().ToList();
+    //    var minWorkItemsCount = 85;
 
-    var entries1 = db.ChangeTracker.Entries();
+    //    var states = db.WorkItemStates
+    //    .FromSqlInterpolated($@"SELECT wis.Id, wis.Value
+    //FROM WorkItemStates wis
+    //JOIN WorkItems wi on wi.StateId = wis.Id
+    //Group BY wis.Id, wis.Value
+    //HAVING COUNT(*) > {minWorkItemsCount}").ToList();
 
-    return states;
+    //    return states;
+
+    db.Database.ExecuteSqlRaw(@"UPDATE Comments
+SET UpdatedDate = GETDATE()
+WHERE AuthorId = '2073271A-3DFC-4A63-CBE5-08DA10AB0E61'");
 });
 
 app.MapPost("update", async (MyBoardsContext db) =>
