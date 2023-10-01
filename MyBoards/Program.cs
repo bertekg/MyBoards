@@ -14,7 +14,9 @@ builder.Services.Configure<JsonOptions>(options =>
 
 
 builder.Services.AddDbContext<MyBoardsContext>(
-    option => option.UseSqlServer(builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
+    option => option
+    .UseLazyLoadingProxies()
+    .UseSqlServer(builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
     );
 
 var app = builder.Build();
@@ -61,10 +63,19 @@ if (users.Any() == false)
     dbContext.SaveChanges();
 }
 
-app.MapGet("data", async (MyBoardsContext db) =>
+app.MapGet("data", (MyBoardsContext db) =>
 {
-    var addresses = db.Addresses.Where(a => a.Coordinate.Latitude > 10);
-    return addresses;
+    var withAddress = true;
+
+    var user = db.Users.First(u => u.Id == Guid.Parse("EBFBD70D-AC83-4D08-CBC6-08DA10AB0E61"));
+
+    if (withAddress)
+    {
+        var result = new { user.FullName, Address = $"{user.Address.Street} {user.Address.City}" };
+        return result;
+    }
+
+    return new { user.FullName, Address = "-" };
 });
 
 app.MapPost("update", async (MyBoardsContext db) =>
