@@ -105,11 +105,45 @@ app.MapGet("pagination", (MyBoardsContext db) =>
     return pageResult;
 });
 
-app.MapGet("data", (MyBoardsContext db) =>
+app.MapGet("data", async (MyBoardsContext db) =>
 {
-    var user = db.Users.Include(u => u.Address).First(u => u.Id == Guid.Parse("EBFBD70D-AC83-4D08-CBC6-08DA10AB0E61"));
+    //var user = await db.Users
+    //    .Include(u => u.Address)
+    //    .Where(u => u.Address.Country == "Albania")
+    //    .ToListAsync();
 
-    return new { user.FullName, Address = $"{user.Address.Street} {user.Address.City}" };
+    //return user.Select(u => u.FullName);
+
+
+    //var userFullNames = await db.Users
+    //    .Include(u => u.Address)
+    //    .Where(u => u.Address.Country == "Albania")
+    //    .Select(u => u.FullName)
+    //    .ToListAsync();
+
+    //return userFullNames;
+
+
+    //var users = await db.Users
+    //    .Include(u => u.Address)
+    //    .Include(u => u.Comments)
+    //    .Where(u => u.Address.Country == "Albania")
+    //    .ToListAsync();
+
+    //var comments = users.SelectMany(u => u.Comments).Select(c => c.Message);
+
+    //return comments;
+
+
+    var userComments = await db.Users
+        .Include(u => u.Address)
+        .Include(u => u.Comments)
+        .Where(u => u.Address.Country == "Albania")
+        .SelectMany(u => u.Comments)
+        .Select(c => c.Message)
+        .ToListAsync();
+
+    return userComments;
 });
 
 app.MapPost("update", async (MyBoardsContext db) =>
