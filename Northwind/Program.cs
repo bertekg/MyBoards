@@ -66,7 +66,7 @@ app.MapGet("getOrderWithShipper", async (NorthwindContext db) =>
 {
     //Order order = await GetOrder(10248, db);
 
-    Order order = await GetOrder(10248, db, o => o.ShipViaNavigation);
+    Order order = await GetOrder(10248, db, o => o.ShipViaNavigation!);
 
     return new { order.OrderId, order.ShipVia, Shipper = order.ShipViaNavigation };
 });
@@ -75,7 +75,7 @@ app.MapGet("getOrderWithCustomer", async (NorthwindContext db) =>
 {
     //Order order = await GetOrder(10248, db);
 
-    Order order = await GetOrder(10248, db, o => o.Customer, o => o.Employee);
+    Order order = await GetOrder(10248, db, o => o.Customer!, o => o.Employee!);
 
     return new { order.OrderId, order.Customer };
 });
