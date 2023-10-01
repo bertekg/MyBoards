@@ -5,7 +5,9 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBoards", "MyBoards\MyBoards.csproj", "{2528EAC9-D030-4B23-902A-B6347C537D55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBoards.Benchmark", "MyBoards.Benchmark\MyBoards.Benchmark.csproj", "{8F12A5EE-4669-4FF9-B7B7-EE7EF6A040D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBoards.Benchmark", "MyBoards.Benchmark\MyBoards.Benchmark.csproj", "{8F12A5EE-4669-4FF9-B7B7-EE7EF6A040D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind", "Northwind\Northwind.csproj", "{C52DAACC-4DAC-4C8A-9833-D7CEA04AECA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{8F12A5EE-4669-4FF9-B7B7-EE7EF6A040D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F12A5EE-4669-4FF9-B7B7-EE7EF6A040D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F12A5EE-4669-4FF9-B7B7-EE7EF6A040D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C52DAACC-4DAC-4C8A-9833-D7CEA04AECA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C52DAACC-4DAC-4C8A-9833-D7CEA04AECA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C52DAACC-4DAC-4C8A-9833-D7CEA04AECA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C52DAACC-4DAC-4C8A-9833-D7CEA04AECA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
