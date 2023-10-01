@@ -15,9 +15,14 @@ builder.Services.Configure<JsonOptions>(options =>
 });
 
 
+//builder.Services.AddDbContext<MyBoardsContext>(
+//    option => option
+//    .UseLazyLoadingProxies()
+//    .UseSqlServer(builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
+//    );
+
 builder.Services.AddDbContext<MyBoardsContext>(
     option => option
-    //.UseLazyLoadingProxies()
     .UseSqlServer(builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
     );
 
@@ -107,43 +112,50 @@ app.MapGet("pagination", (MyBoardsContext db) =>
 
 app.MapGet("data", async (MyBoardsContext db) =>
 {
-    //var user = await db.Users
-    //    .Include(u => u.Address)
+    // Z Lazy Loading
+    //var users = await db.Users
     //    .Where(u => u.Address.Country == "Albania")
+    //    .Include(u => u.Comments)
     //    .ToListAsync();
 
-    //return user.Select(u => u.FullName);
+    //foreach (var user in users)
+    //{
+    //    foreach (var comments in user.Comments)
+    //    {
+    //        // Wykonaj operacje na komentarzach
+    //    }
+    //}
 
 
-    //var userFullNames = await db.Users
-    //    .Include(u => u.Address)
-    //    .Where(u => u.Address.Country == "Albania")
-    //    .Select(u => u.FullName)
-    //    .ToListAsync();
-
-    //return userFullNames;
-
-
+    // Bez Lazy Loading
     //var users = await db.Users
     //    .Include(u => u.Address)
-    //    .Include(u => u.Comments)
     //    .Where(u => u.Address.Country == "Albania")
     //    .ToListAsync();
 
-    //var comments = users.SelectMany(u => u.Comments).Select(c => c.Message);
+    //foreach (var user in users)
+    //{
+    //    var userComments = await db.Comments.Where(c => c.AuthorId == user.Id).ToListAsync();
+    //    foreach (var comments in userComments)
+    //    {
+    //        // Wykonaj operacje na komentarzach
+    //    }
+    //}
 
-    //return comments;
 
-
-    var userComments = await db.Users
+    var users = await db.Users
         .Include(u => u.Address)
         .Include(u => u.Comments)
         .Where(u => u.Address.Country == "Albania")
-        .SelectMany(u => u.Comments)
-        .Select(c => c.Message)
         .ToListAsync();
 
-    return userComments;
+    foreach (var user in users)
+    {
+        foreach (var comments in user.Comments)
+        {
+            // Wykonaj operacje na komentarzach
+        }
+    }
 });
 
 app.MapPost("update", async (MyBoardsContext db) =>
