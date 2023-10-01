@@ -14,13 +14,6 @@ builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
-
-//builder.Services.AddDbContext<MyBoardsContext>(
-//    option => option
-//    .UseLazyLoadingProxies()
-//    .UseSqlServer(builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
-//    );
-
 builder.Services.AddDbContext<MyBoardsContext>(
     option => option
     .UseSqlServer(builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
@@ -112,37 +105,6 @@ app.MapGet("pagination", (MyBoardsContext db) =>
 
 app.MapGet("data", async (MyBoardsContext db) =>
 {
-    // Z Lazy Loading
-    //var users = await db.Users
-    //    .Where(u => u.Address.Country == "Albania")
-    //    .Include(u => u.Comments)
-    //    .ToListAsync();
-
-    //foreach (var user in users)
-    //{
-    //    foreach (var comments in user.Comments)
-    //    {
-    //        // Wykonaj operacje na komentarzach
-    //    }
-    //}
-
-
-    // Bez Lazy Loading
-    //var users = await db.Users
-    //    .Include(u => u.Address)
-    //    .Where(u => u.Address.Country == "Albania")
-    //    .ToListAsync();
-
-    //foreach (var user in users)
-    //{
-    //    var userComments = await db.Comments.Where(c => c.AuthorId == user.Id).ToListAsync();
-    //    foreach (var comments in userComments)
-    //    {
-    //        // Wykonaj operacje na komentarzach
-    //    }
-    //}
-
-
     var users = await db.Users
         .Include(u => u.Address)
         .Include(u => u.Comments)
